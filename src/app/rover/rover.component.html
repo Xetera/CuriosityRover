@@ -1,2 +1,4 @@
-<h2>{{title}}</h2>
-
+<h2>{{pictures.length}} pictures loaded</h2>
+<div *ngFor="let picture of pictures">
+    <img [src]="picture.img_src">
+</div>
