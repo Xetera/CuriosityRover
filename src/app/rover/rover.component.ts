@@ -1,7 +1,6 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {ApiService} from '../services/api.service';
 import {Picture} from '../interfaces/nasa';
-import {InfiniteScrollDirective} from 'ngx-infinite-scroll';
 import {Observable} from 'rxjs/Observable';
 import {Observer} from 'rxjs/Observer';
 import { throttleTime } from 'rxjs/operators';
@@ -37,8 +36,7 @@ export class RoverComponent implements OnInit {
     public sendRequest(): void {
         this.APIReady = false;
         this.api.getPictures().then((message: Picture[])=> {
-            this.pictures = this.pictures.concat(message);
-            console.log(this.pictures);
+            this.pictures = this.api.pictures;
             this.api.incrementPage();
         });
         // I know I could be using throttleTime for this but
