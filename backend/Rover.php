@@ -7,17 +7,6 @@
 header("Access-Control-Allow-Origin: http://localhost:4200");
 include "config.php";
 
-abstract class Cameras {
-    const FHAZ    = 0;
-    const RHAZ    = 1;
-    const MAST    = 2;
-    const CHEMCAM = 3;
-    const MAHLI   = 4;
-    const MARDI   = 5;
-    const NAVCAM  = 6;
-    const PANCAM  = 7;
-    const MINITES = 8;
-}
 class Rover {
     /**
      * Base endpoint for requests
