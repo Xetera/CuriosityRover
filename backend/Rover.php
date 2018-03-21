@@ -19,19 +19,31 @@ abstract class Cameras {
     const MINITES = 8;
 }
 class Rover {
-    private $pictures;
-    private $endpoint = 'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&camera=fhaz&api_key=';
+    /**
+     * Base endpoint for requests
+     * @var string
+     */
+    private $endpoint = 'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?';
 
-    private function formatEndpoint($camera){
-        return $this->endpoint . $camera . ROVER_TOKEN;
+    /**
+     * Returns a formatted endpoint
+     * @param string $camera
+     * @param string $page
+     * @return string
+     */
+    private function formatEndpoint(string $camera, string $page): string {
+        $endpoint = $this->endpoint .'sol=1000&page='. $page  . '&api_key='. ROVER_TOKEN;
+        return $endpoint;
     }
 
-    private function fetchPictureURL($object){
-        //return $object.
-    }
-
-    public function getPictures($camera){
-        $endpoint = $this->formatEndpoint($camera);
+    /**
+     * Fetches json response from NASA
+     * @param string $camera
+     * @param string $page
+     * @return bool|string
+     */
+    public function getPictures(string $camera, string $page): string {
+        $endpoint = $this->formatEndpoint($camera, $page);
         $response = file_get_contents($endpoint);
         return $response;
     }
