@@ -7,21 +7,18 @@ import { AppRoverComponent } from './app.rover.component';
 import { RoverComponent } from './rover/rover.component';
 import {HttpModule} from '@angular/http';
 import {ApiService} from './services/api.service';
-import {HttpClient, HttpClientModule, HttpHandler} from '@angular/common/http';
-import { PictureComponent } from './picture/picture.component';
-
+import {HttpClient, HttpClientModule, HttpHandler, HttpHeaders} from '@angular/common/http';
 
 @NgModule({
     declarations: [
         AppComponent,
         AppRoverComponent,
         RoverComponent,
-        PictureComponent
+
     ],
     imports: [
         BrowserModule,
-        HttpClientModule,
-        HttpModule
+        HttpClientModule
     ],
     providers: [ApiService, HttpClient],
     bootstrap: [AppComponent]
