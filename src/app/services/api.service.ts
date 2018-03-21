@@ -1,34 +1,54 @@
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
+import {Injectable, OnInit} from '@angular/core';
+import {Http, Headers, } from '@angular/http';
 import 'rxjs/add/operator/map'
+import {CameraType, Picture} from '../interfaces/nasa';
 export type Image = string;
 
 @Injectable()
 export class ApiService {
-    constructor(private http: HttpClient) {
-
+    private camera: CameraType = 'CHEMCAM';
+    private headers: HttpHeaders;
+    private page: number = 1;
+    constructor(private http: HttpClient
+    ) {
+        this.headers = new HttpHeaders();
     }
-    private static extractImageURL(message){
-        return message.img_src;
+
+    public setCamera(camera: CameraType){
+        this.camera = camera;
     }
 
-    getPictures(): Promise<string> {
+    public incrementPage(){
+        this.page++;
+    }
+
+
+    private setHeaders(camera: string, page: number){
+        this.headers = this.headers.set('Camera', this.camera).set('Page', this.page.toString());
+    }
+
+    private static extractAllImageURL(pictures: Picture[]): string[]{
+        return pictures.map(picture => picture.img_src);
+    }
+
+    private static extractImageURL(picture: Picture){
+        return picture.img_src;
+    }
+
+    getPictures(): Promise<Picture[]> {
         console.log('fetching php file');
+        this.setHeaders('', this.page);
+        console.log(this.headers);
         return new Promise((resolve => {
-            this.http.get('http://localhost:9000',
-                {
-                    responseType: 'text',
-                    headers: {
-                        'camera': 'FHAZ',
-                        'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
-                    }
-                }).toPromise().then((resp: string) => {
+            this.http.get('http://localhost:9000',{responseType: 'text', headers: this.headers}).subscribe((resp: string) => {
                 console.log(resp);
-                let file = JSON.parse(resp);
-                let urls: string[] = file.photos.map(ApiService.extractImageURL);
-                console.log(file.photos);
-                resolve(JSON.stringify(file));
+                console.log(`current page: ${this.page}`)
+                let pictures: Picture[];
+                pictures = JSON.parse(resp).photos;
+
+                console.log(pictures);
+                resolve(pictures);
             });
         }))
     }
