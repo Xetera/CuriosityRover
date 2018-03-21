@@ -6,6 +6,7 @@
 /tmp
 /out-tsc
 
+backend/config.php
 # dependencies
 /node_modules
 
