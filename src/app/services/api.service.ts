@@ -10,6 +10,7 @@ export class ApiService {
     private camera: CameraType = 'CHEMCAM';
     private headers: HttpHeaders;
     private page: number = 1;
+    public pictures: Picture[] = [];
     constructor(private http: HttpClient
     ) {
         this.headers = new HttpHeaders();
@@ -43,10 +44,10 @@ export class ApiService {
         return new Promise((resolve => {
             this.http.get('http://localhost:9000',{responseType: 'text', headers: this.headers}).subscribe((resp: string) => {
                 console.log(resp);
-                console.log(`current page: ${this.page}`)
+                console.log(`current page: ${this.page}`);
                 let pictures: Picture[];
                 pictures = JSON.parse(resp).photos;
-
+                this.pictures = this.pictures.concat(pictures);
                 console.log(pictures);
                 resolve(pictures);
             });
