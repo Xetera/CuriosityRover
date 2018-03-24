@@ -2,7 +2,7 @@ import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
 import {Injectable, OnInit} from '@angular/core';
 import {Http, Headers, } from '@angular/http';
 import 'rxjs/add/operator/map'
-import {CameraType, Picture} from '../interfaces/nasa';
+import {CameraType, Picture, Rover} from '../interfaces/nasa';
 export type Image = string;
 
 @Injectable()
@@ -11,6 +11,7 @@ export class ApiService {
     private headers: HttpHeaders;
     private page: number = 1;
     public pictures: Picture[] = [];
+    public curiosity: Rover;
     constructor(private http: HttpClient
     ) {
         this.headers = new HttpHeaders();
@@ -47,6 +48,7 @@ export class ApiService {
                 console.log(`current page: ${this.page}`);
                 let pictures: Picture[];
                 pictures = JSON.parse(resp).photos;
+                this.curiosity = pictures.find(p => p.rover.name === 'Curiosity').rover;
                 this.pictures = this.pictures.concat(pictures);
                 console.log(pictures);
                 resolve(pictures);
