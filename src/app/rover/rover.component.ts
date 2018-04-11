@@ -2,8 +2,9 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {ApiService} from '../services/api.service';
 import {Picture} from '../interfaces/nasa';
 import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import { throttleTime } from 'rxjs/operators';
+import {Observable as Observ} from 'rxjs';
+import {sendRequest} from 'selenium-webdriver/http';
+
 @Component({
     selector: 'rover',
     templateUrl: './rover.component.html',
@@ -25,25 +26,22 @@ export class RoverComponent implements OnInit {
     ngOnInit() {
         this.sendRequest();
         // anonymous function since we don't want to create a new 'this' variable
-        window.addEventListener('scroll',() =>  this.checkScrollPosition());
+        Observ.fromEvent(window, 'scroll')
+            .throttleTime(500)
+            .subscribe(() => this.checkScrollPosition());
     }
     public checkScrollPosition(){
-        if ( window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+        if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
             console.log('scrolled to the bottom');
             if (this.APIReady) this.sendRequest();
         }
     }
     public sendRequest(): void {
-        this.APIReady = false;
-        this.api.getPictures().then((message: Picture[])=> {
-            this.pictures = this.api.pictures;
+        this.api.getPictures().subscribe((message: Picture[])=> {
+            //console.log(message);
+            console.log(message);
+            this.pictures = this.pictures.concat(message);
             this.api.incrementPage();
         });
-        // I know I could be using throttleTime for this but
-        // I really couldn't figure out how observables work
-        setTimeout(() => {
-            this.APIReady = true;
-            console.log('now ready')
-        }, 2000);
     }
 }

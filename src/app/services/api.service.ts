@@ -3,6 +3,8 @@ import {Injectable, OnInit} from '@angular/core';
 import {Http, Headers, } from '@angular/http';
 import 'rxjs/add/operator/map'
 import {CameraType, Picture, Rover} from '../interfaces/nasa';
+import {Observable} from 'rxjs/Observable';
+import {debounce} from 'rxjs/operator/debounce';
 export type Image = string;
 
 @Injectable()
@@ -25,7 +27,6 @@ export class ApiService {
         this.page++;
     }
 
-
     private setHeaders(camera: string, page: number){
         this.headers = this.headers.set('Camera', this.camera).set('Page', this.page.toString());
     }
@@ -38,21 +39,12 @@ export class ApiService {
         return picture.img_src;
     }
 
-    getPictures(): Promise<Picture[]> {
+    getPictures(): Observable<Picture[]> {
         console.log('fetching php file');
         this.setHeaders('', this.page);
-        console.log(this.headers);
-        return new Promise((resolve => {
-            this.http.get('http://localhost:9000',{responseType: 'text', headers: this.headers}).subscribe((resp: string) => {
-                console.log(resp);
-                console.log(`current page: ${this.page}`);
-                let pictures: Picture[];
-                pictures = JSON.parse(resp).photos;
-                this.curiosity = pictures.find(p => p.rover.name === 'Curiosity').rover;
-                this.pictures = this.pictures.concat(pictures);
-                console.log(pictures);
-                resolve(pictures);
-            });
-        }))
+        //console.log(this.headers);
+        return this.http.get('http://localhost:9000',{responseType: 'text', headers: this.headers})
+            .map((resp: string) => JSON.parse(resp)['photos'])
+
     }
 }
