@@ -2,7 +2,7 @@
     display:flex;
     justify-content: space-around;
     width: 100%;
-    background: linear-gradient(0deg, #ff362f 50%, #ff4b52 50%);
+    background: linear-gradient(#ff362f, #ff4b52);
 }
 
 .name {
@@ -15,4 +15,8 @@
 
 .filter {
     margin-top: 1rem;
+}
+
+body {
+    background: antiquewhite;
 }

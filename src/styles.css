@@ -1,10 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-    background-color: #ffffff;
+    background: antiquewhite;
 }
 * {
     font-family: "Fira Sans ExtraBold";
 }
+
 @font-face {
     font-family: "Fira Sans ExtraBold";
 }
